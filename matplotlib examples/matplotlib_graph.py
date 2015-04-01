@@ -1,4 +1,3 @@
-"""
 import matplotlib.pyplot as plt
 from io import BytesIO
 import PIL
@@ -29,4 +28,3 @@ def test_graph(request):
     
     response = HttpResponse(buffer.getvalue(), content_type = 'image/png')
     return response
-"""
