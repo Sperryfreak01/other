@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Mar 31 14:34:19 2015
-
-@author: friedhop
-"""
 import pandas as pd
 
 columns = "G:J"
