@@ -1,7 +1,7 @@
 import pandas as pd
 pd.set_option('display.mpl_style', 'default')
 
-path = 'C:/Users/friedhop/AppData/Local/Continuum/Anaconda3/envs/trypandas/src/inventory.xlsx'
+path = 'C:/Users/friedhop/Desktop/other_scripts/inventory.xlsx'
 columns1 = "G:J,K,L,AQ,AV"
 raw1 = pd.read_excel(path, sheetname = 'Sheet 2', header = 0, na_values = ['NA'], parse_cols = columns1)
 columns2 = "C:D,L"
