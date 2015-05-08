@@ -35,7 +35,19 @@ under DATABASES (don't forget to have psycopg2 installed in the env)
 5a) git remote add "name (usually 'origin')" location
 5b) git remote add origin https://github.com/peteza33/suggest
 6) git push origin master
+
+to branch:
+1) git branch name
+2) git checkout name
+3) git push origin name & git pull origin name
+4) git checkout master
+5) git merge name
+6) git branch -D name
+7) git push origin --delete name
 """
+
+
+
 
 """
 ---OLD---
