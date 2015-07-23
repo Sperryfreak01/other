@@ -32,12 +32,16 @@ body = {"email": "pfriedhoff@nextracker.com", "password": "Spicyworkpass2015", "
 r = requests.post(url + endpoint, headers = headers, data = json.dumps(body))
 login_data = r.json()
 
-# Query Items
-endpoint = 'items/categories'
+# Search for item object. Returns 'Compact Item' object
+endpoint = 'items'
 headers["arena_session_id"] = login_data["arenaSessionId"]
-r = requests.get(url + endpoint, headers = headers)
-items_data = r.json()
+params  = {'number': '5113'}
+r = requests.get(url + endpoint, headers = headers, params = params)
+item = r.json()
+
+# Get item revisions. Returns 'revision' object
+item_guid = item['results'][0]['guid']
 
 # Logout
-r = requests.get('https://api.arenasolutions.com/v1/logout', headers = headers)
-print ('Logout code is: %s' % r.status_code)
+# r = requests.get('https://api.arenasolutions.com/v1/logout', headers = headers)
+# print ('Logout code is: %s' % r.status_code)
