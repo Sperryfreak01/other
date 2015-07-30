@@ -28,7 +28,7 @@ url = "https://api.arenasolutions.com/v1/"
 # Login first
 endpoint = 'login'
 headers = {"content-type": "application/json"}
-body = {"email": "pfriedhoff@nextracker.com", "password": "Spicyworkpass2015", "workspaceId": "896561705"}
+body = {"email": "pfriedhoff@nextracker.com", "password": "", "workspaceId": "896561705"}
 r = requests.post(url + endpoint, headers = headers, data = json.dumps(body))
 login_data = r.json()
 
