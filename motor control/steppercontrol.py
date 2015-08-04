@@ -31,46 +31,7 @@ from Phidgets.Phidget import PhidgetLogLevel
 Step 1
 a. Create Manager object
 b. Create event handler callback functions
-c. Print attached device info
+c. Set the event handlers
+d. Open the Manager via the object
+e. Display device info
 """
-# Create Manager object
-try:
-	manage = Manager()
-except RuntimeError as error:
-	print ('Runtime Exception: %s' % error.details)
-	print ('Something broke with the Manager :(')
-	exit(1)
-
-# Create even handler callabacks (skip the server related ones)
-def device_attached_callback(i):
-	attached = i.device
-	# methods in base class Phidgets.Phidget.Phidget
-	print ('From your friendly manager: Device - %i: %s is attached!' % (attached.getSerialNumber(), attached.getDeviceName()))
-
-def device_detached_callback(i):
-	detached = i.device
-	print ('From your friendly manager: Device - %i: %s is attached!' % (detached.getSerialNumber(), detached.getDeviceName()))
-
-def device_error_callback(i):
-	print ('Sadly, a Phidget error has occured: %i: %s' % (i.Code, i.description))
-
-# Set the event handlers. These get called when a Phidget is physically plugged-in or removed
-try:
-	manage.setOnAttachHandler(device_attached_callback)
-	manage.setOnDetachHandler(device_detached_callback)
-	manage.setOnErrorHandler(device_error_callback)
-except PhidgetException as error:
-	print ('A device exception has occured - %i: %s' % (error.code, error,details))
-
-
-
-
-
-try:
-	stepper = Stepper()
-	encoder = Encoder()
-except RuntimeError as error:
-	print ('Runtime Exception: %s' % error.details)
-	print ('Quiting :(')
-	exit(1)
-
