@@ -19,6 +19,13 @@ Step 1. Create Phidget object(s) - gives access to device specific functions
 Step 2. Open Phidget using object
 Step 3. Detect when a device is attached using object
 Step 4. Main program - Call API methods to control the system
+	a. for each direction
+		b. while position error is large
+			c. drive the motor at input speed
+			d. use the PID controller to control time step
+			e. collect motor current & torque sensor data for output file
+			f. check that current & torque haven't gone crazy which may indicate a mechanical problem
+			g. calculated update position error
 Step 5. Close object
 Step 6. Output CSV
 
@@ -39,6 +46,7 @@ c. Torque Sensor
 # General Python imports
 import sys
 import time
+import csv
 
 # Device specific imports
 from Phidgets.PhidgetException import PhidgetErrorCodes, PhidgetException
@@ -105,14 +113,14 @@ inputs = {
 }
 
 # Convert speed: deg/sec -> RPM -> % duty cycle. Motor rotation: 33 RPM at 100% voltage (24 VDC)
-# Convert position to counts for the encoder. Encoder has 300 counts/revolution = 0.833 counts/degree
+# Convert position to counts for the encoder. Encoder has 300 counts/revolution = 0.833 counts/degree with a 76 reduction ratio
 PWM_duty_cycle = []
 commanded_position = []
 
 # each list ordered [open, close]
 for key, value in inputs.items():
 	PWM_duty_cycle.append((value[0] * 0.16666) / 33)
-	commanded_position.append(value[1] * 0.83333)
+	commanded_position.append(value[1] * (0.83333/76)
 
 # Set encoder & calculate position difference [open, close]
 encoder.setPosition(0, 0)
@@ -197,17 +205,7 @@ torque_sensor_output = []
 position_output = []
 velocity_output = []
 
-"""
-Plain text description
-
-for each direction
-	while position error is large
-		drive the motor at input speed
-		use the PID controller to control time step
-		collect motor current & torque sensor data for output file
-		check that current & torque haven't gone crazy which may indicate a mechanical problem
-		calculated update position error
-"""
+# Main loop
 for direction in inputs.keys():
 	if direction == 'Open':
 		difference = position_difference[0]
@@ -241,7 +239,7 @@ for direction in inputs.keys():
 
 		# Build output lists
 		motor_current_output.append(motor.getCurrent(0))
-		torque_sensor_output.append(torque_sensor.getSensorValue(0))
+		torque_sensor_output.append(torque_sensor.getSensorValue(0) * 17.8)
 		position_output.append(encoder.getPosition(0))
 		velocity_output.append(motor.getVelocity(0))
 
@@ -273,3 +271,11 @@ except PhidgetException as error:
 """
 Step 6 - Output recorded data as CSV file
 """
+headers = ['Motor Current (A)', 'Torque (in-lbs)', 'Position', 'Velocity']
+rows = [motor_current_output, torque_sensor_output, position_output, velocity_output]
+
+with open('hinge_test.csv', 'w') as f:
+	f_csv = csv.writer(f)
+	f_csv.writerows(headers)
+	f_csv.writerows(rows)
+exit(0)
