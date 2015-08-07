@@ -185,11 +185,11 @@ class PID:
         # Proportional + Integral*IntegralError + Derivative*DerivativeError
         return self.Cp + (self.Ki * self.Ci) + (self.Kd * self.Cd)
 
-# Now instantiate the PID controller & set the gains
+# Now instantiate the PID controller & set the initial gains (WAG)
 pid = PID()
-pid.SetKp(Kp)
-pid.SetKd(Kd)
-pid.SetKi(Ki)
+pid.SetKp(1.1)
+pid.SetKd(1)
+pid.SetKi(1)
 
 # Create lists to store output's of interest
 motor_current_output = []
@@ -216,14 +216,24 @@ for direction in inputs.keys():
 
 	while difference > 1:
 		# Set accleeration to 50%
-		motor.setAcceleration(0, 50)
+		try:
+			motor.setAcceleration(0, 50)
+		except PhidgetException as error:
+			print ('Phidget Error %i: %s' % (error.code, error.details))
 
 		# Speed & error depend on the direction we're going
 		if direction == 'Open':
-			motor.setVelocity(0, PWM_duty_cycle[0]) # Set the OPEN speed as positive
-			commanded_position = commanded_position[0] # Set using the OPEN index			
+			try:
+				motor.setVelocity(0, PWM_duty_cycle[0]) # Set the OPEN speed as positive
+			except PhidgetException as error:
+				print ('Phidget Error %i: %s' % (error.code, error.details))
+			commanded_position = commanded_position[0] # Set using the OPEN index
+
 		else:
-			motor.setVelocity(0, -PWM_duty_cycle[1]) # Set the CLOSE speed as negative
+			try:
+				motor.setVelocity(0, -PWM_duty_cycle[1]) # Set the CLOSE speed as negative
+			except PhidgetException as error:
+				print ('Phidget Error %i: %s' % (error.code, error.details))
 			commanded_position = commanded_position[1] # Set using the CLOSE index
 
 		error = commanded_position[0] - encoder.getPosition(0)
@@ -235,16 +245,31 @@ for direction in inputs.keys():
 		position_output.append(encoder.getPosition(0))
 		velocity_output.append(motor.getVelocity(0))
 
-		# Check nothing is breaking too bad
+		# Monitor sensors to make sure nothing is breaking too bad!
 		# Rated current is 2.2 Amps. Stall current is 10 Amps
-		if motor.getCurrent(0) >= 5:   
+		if motor.getCurrent(0) > 3:   
 			motor.setVelocity(0, 0)
 			motor.closePhidget()
 			exit(1)
-
-		# Torque sensor outputs 0-5 VDC linearly with full-scale torque = 89 in-lbs
-		if torque_sensor.getSensorValue()
+		# Torque sensor outputs 0-5 VDC linearly with full-scale torque = 89 in-lbs. So 64 in-lbs ~ 3.6 VDC
+		if torque_sensor.getSensorValue(0) > 3.6:
+			motor.setVelocity(0, 0)
+			motor.closePhidget()
+			exti(1)
 
 		# Evaluate new position to check against
 		updated_position = encoder.getPosition(0)
 		difference = commanded_position - updated_position
+
+"""
+Step 5 - Close the objects
+"""
+try:
+	motor.closePhidget()
+	encoder.closePhidget()
+except PhidgetException as error:
+	print ('Phidget Error %i: %s' % (error.code, error.details))
+
+"""
+Step 6 - Output recorded data as CSV file
+"""
