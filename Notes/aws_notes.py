@@ -17,5 +17,6 @@ aws elasticbeanstalk help
 """
 
 # EB workflow:
-# eb init --profile 'name'
-# eb create --profile 'name'
+# see: http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb3-cmd-commands.html
+#	 eb init --profile 'name'
+#	 eb create --profile 'name'

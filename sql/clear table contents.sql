@@ -1,0 +1,1 @@
+﻿DELETE FROM changes_change_items;
