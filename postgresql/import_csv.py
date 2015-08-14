@@ -1,14 +1,20 @@
 """
 Script to load csv files into PostgreSQL database
-Work towards:
-	a. Autmatically clearing each table
-	b. Bulk import of multiple csv files
-	c. Alter tables to enfore relationships after load
+
+Ideally trying for this workflow
+	For each table in database:
+		a. clear contents
+		b. import correct csv file
+		c. apply appropriate field relationships
 """
+import os
 import psycopg2
 
 # Create the SQL copy statement to pass into copy_expert()
 SQL = "COPY %s FROM STDIN WITH DELIMITER ',' CSV HEADER"
+
+# Get list of all files
+file_list = os.listdir('C:/Users/pfriedhoff/Desktop/Arena Extracts')
 
 # Create file object to pass into copy_expert()
 my_file = open('C:/Users/pfriedhoff/Desktop/Arena Extracts/Changes_Summary.csv')
@@ -20,11 +26,17 @@ def import_file(conn, table_name, file_object):
 	conn.commit()
 	cursor.close()
 
-# Setup database connection
+# Setup database connection: http://initd.org/psycopg/docs/module.html
 try:
 	conn = psycopg2.connect(database = 'try_imports', host = 'localhost', user = 'postgres', password = '123')
-except:
-	print ('Cannot connect to db')
+except psycopg2.Error as e:
+	print ('Cannot connect to db: %s, %s' % (e.pgcode, e.pgerror))
+
+# Get all tables
+# cursor = conn.cursor()
+# cursor.execute("SELECT * FROM information_schema.tables WHERE table_schema ='public'")
+# for i in cursor:
+# 	print (i)
 
 # Execute copy_expert()
 try:
