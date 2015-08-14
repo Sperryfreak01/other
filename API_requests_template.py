@@ -19,7 +19,6 @@ Google Directions API example
 # data = r.json()
 # print (r.status_code)
 
-
 """
 Arena PLM API
 """
