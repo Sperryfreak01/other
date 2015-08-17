@@ -19,7 +19,7 @@ file_list = os.listdir('C:/Users/pfriedhoff/Desktop/Arena Extracts')
 # Create file object to pass into copy_expert()
 my_file = open('C:/Users/pfriedhoff/Desktop/Arena Extracts/Changes_Summary.csv')
 
-# Refer to: http://initd.org/psycopg/docs/cursor.html?highlight=copy%20expert#cursor.copy_expert
+# Import function. Refer to: http://initd.org/psycopg/docs/cursor.html?highlight=copy%20expert#cursor.copy_expert
 def import_file(conn, table_name, file_object):
 	cursor = conn.cursor()
 	cursor.copy_expert(sql = SQL % table_name, file = file_object)
@@ -32,11 +32,12 @@ try:
 except psycopg2.Error as e:
 	print ('Cannot connect to db: %s, %s' % (e.pgcode, e.pgerror))
 
-# Get all tables
-# cursor = conn.cursor()
-# cursor.execute("SELECT * FROM information_schema.tables WHERE table_schema ='public'")
-# for i in cursor:
-# 	print (i)
+# Get list of all tables
+cursor = conn.cursor()
+cursor.execute("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'")
+table_list = []
+for i in cursor.fetchall():
+	table_list.append(i)  
 
 # Execute copy_expert()
 try:
