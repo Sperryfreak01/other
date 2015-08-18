@@ -27,6 +27,22 @@
  PRIMARY KEY (guid)
  );
 
+ CREATE TABLE items_bom_custom_attributes
+ (
+  trans varchar(5),
+  guid varchar(25) NOT NULL,
+  bom_guid varchar(25),
+  item_guid varchar(25),
+  item_number varchar(200),
+  item_revision varchar(25),
+  child_item_guid varchar(25),
+  child_item_revision varchar(25),
+  attribute_guid varchar(25),
+  attribute_name varchar(201),
+  attribute_value varchar(255),
+  PRIMARY KEY (guid)
+);
+
  CREATE TABLE items_custom_attributes
  (
   trans varchar(5),

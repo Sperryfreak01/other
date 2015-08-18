@@ -2,8 +2,8 @@ CREATE TABLE requests_summary
 (
 	trans varchar(5),
 	guid varchar(25) NOT NULL,
-	problem varchar(255),
-	requested_action varchar(255),
+	problem varchar(500),
+	requested_action varchar(500),
 	category varchar(80),
 	request_number varchar(20),
 	request_title varchar(100),
