@@ -16,7 +16,7 @@ file_list.sort()
 
 # Setup connection: http://initd.org/psycopg/docs/module.html
 try:
-	connection = psycopg2.connect(database = 'try_imports', host = 'localhost', user = 'postgres', password = '123')
+	connection = psycopg2.connect(database = 'NTarenadump', host = 'nt-arena-dump.co2objn467gs.us-west-2.rds.amazonaws.com', user = 'pfriedhoff', password = '')
 except psycopg2.Error as e:
 	print ('Cannot connect to db: %s, %s' % (e.pgcode, e.pgerror))
 
@@ -34,7 +34,7 @@ tables_to_files = dict(zip(table_list, file_list))
 
 # Create tables (look into how to cursor.execute(my_sql_file.sql))
 
-# Drop (remove) existing tables
+# Drop (remove) existing tables [not really needed]
 # cursor = connection.cursor()
 # for i in table_list:
 # 	try:
@@ -52,8 +52,9 @@ cursor = connection.cursor()
 for i in table_list:
 	try:
 		cursor.execute("DELETE FROM %s" % i)
-	except:
+	except psycopg2.Error as e:
 		print ('Something went wrong deleting data from %s' % i)
+		print ('%s, %s' % (e.pgcode, e.pgerror))
 		break
 	else:
 		print ('Deleted from: %s' % i)
