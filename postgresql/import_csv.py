@@ -39,8 +39,9 @@ tables_to_files = dict(zip(table_list, file_list))
 # for i in table_list:
 # 	try:
 # 		cursor.execute("DROP TABLE IF EXISTS %s" % i)
-# 	except:
+# 	except psycopg2.Error as e:
 # 		print ('Something went wrong dropping table: %s' % i)
+# 		print ('%s, %s' % (e.pgcode, e.pgerror))
 # 		break
 # 	else:
 # 		print ('Dropped: %s' % i)
