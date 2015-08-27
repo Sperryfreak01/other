@@ -1,5 +1,8 @@
 """
 Script to pull data from the API for processing
+
+refer to: https://ultimatedjango.com/blog/how-to-consume-rest-apis-with-django-python-reques/
+and: http://stackoverflow.com/questions/30259452/proper-way-to-consume-data-from-restful-api-in-django
 """
 import requests, json
 
