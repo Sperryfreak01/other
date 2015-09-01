@@ -42,18 +42,34 @@ url = "https://api.arenasolutions.com/v1/"
 
 # Login to get Arena session Id
 headers = {"content-type": "application/json"}
-body = {"email": "pfriedhoff@nextracker.com", "password": "", "workspaceId": "896561705"}
+body = {"email": "pfriedhoff@nextracker.com", "password": "Spicyworkpass2015", "workspaceId": "896561705"}
 r = requests.post(url + 'login', headers = headers, data = json.dumps(body))
 print ('Login code is: %s' % r.status_code)
 
-# Search for Item based on number to get its GUID
+# Search for Item GUID
 headers["arena_session_id"] = r.json().get('arenaSessionId')
 params  = {'number': 'PDM-000002'}
 r = requests.get(url + 'items', headers = headers, params = params)
-results_data = r.json()
+print ('Item search code: %s' % r.status_code)
+item_search_results = r.json()
 
-print (list(find('guid', results_data)))
+print (list(find('guid', item_search_results)))
+
+item_guid = list(find('guid', item_search_results))[1]
+
+# Search for Item's files via the GUID
+r = requests.get(url + 'items/' + item_guid +'/files', headers = headers)
+print ('file search code: %s' % r.status_code)
+file_search_results = r.json()
+
+print (list(find('guid', file_search_results)))
+
+file_guid = list(find('guid', file_search_results))[2]
+
+# Get file content
+r = requests.get(url + 'items/' + item_guid + '/files/' + file_guid + '/content', headers = headers)
+print ('content code: %s' % r.status_code)
 
 # Logout
-r = requests.get('https://api.arenasolutions.com/v1/logout', headers = headers)
-print ('Logout code is: %s' % r.status_code)
+#r = requests.get('https://api.arenasolutions.com/v1/logout', headers = headers)
+#print ('Logout code is: %s' % r.status_code)
