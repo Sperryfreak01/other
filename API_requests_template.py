@@ -64,7 +64,7 @@ file_search_results = r.json()
 
 print (list(find('guid', file_search_results)))
 
-file_guid = list(find('guid', file_search_results))[2]
+file_guid = list(find('guid', file_search_results))[0]
 
 # Get file content
 r = requests.get(url + 'items/' + item_guid + '/files/' + file_guid + '/content', headers = headers)
