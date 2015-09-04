@@ -1,10 +1,10 @@
 """
-Script to load csv files into PostgreSQL database
+Script to load csv files into remote PostgreSQL database
 
 Overview:
 1. Get list of files to import
 2. Get list of tables
-3. Clear each table
+3. Clear each table of existing data
 4. Import new csv data into each table
 """
 import os

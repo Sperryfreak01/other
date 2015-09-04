@@ -64,7 +64,7 @@ CREATE TABLE items_bom
  child_item_guid varchar(25),
  child_item_number varchar(200),
  child_item_revision varchar(15),
- quantity smallint,
+ quantity integer,
  bom_notes varchar(255),
  reference_designators varchar(255),
  PRIMARY KEY (guid)
