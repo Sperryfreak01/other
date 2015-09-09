@@ -42,33 +42,39 @@ url = "https://api.arenasolutions.com/v1/"
 
 # Login to get Arena session Id
 headers = {"content-type": "application/json"}
-body = {"email": "pfriedhoff@nextracker.com", "password": "Spicyworkpass2015", "workspaceId": "896561705"}
+body = {"email": "pfriedhoff@nextracker.com", "password": "Spicyworkpass2015!", "workspaceId": "896561705"}
 r = requests.post(url + 'login', headers = headers, data = json.dumps(body))
-print ('Login code is: %s' % r.status_code)
+print ('login code is: %s' % r.status_code)
 
 # Search for Item GUID
 headers["arena_session_id"] = r.json().get('arenaSessionId')
 params  = {'number': 'PDM-000002'}
 r = requests.get(url + 'items', headers = headers, params = params)
-print ('Item search code: %s' % r.status_code)
-item_search_results = r.json()
-
-print (list(find('guid', item_search_results)))
-
-item_guid = list(find('guid', item_search_results))[1]
+print ('ttem search code: %s' % r.status_code)
+item_results = r.json()
+item_guid = item_results['results'][0]['guid']
 
 # Search for Item's files via the GUID
 r = requests.get(url + 'items/' + item_guid +'/files', headers = headers)
 print ('file search code: %s' % r.status_code)
-file_search_results = r.json()
-
-print (list(find('guid', file_search_results)))
-
-file_guid = list(find('guid', file_search_results))[0]
+file_results = r.json()
+file_guid = file_results['results'][0]['guid']
 
 # Get file content
-r = requests.get(url + 'items/' + item_guid + '/files/' + file_guid + '/content', headers = headers)
+r = requests.get(url + 'items/' + item_guid + '/files/' + file_guid + '/content', headers = headers, stream = True)
 print ('content code: %s' % r.status_code)
+
+# This works!
+open('C:/Users/pfriedhoff/Desktop/first.pdf', 'wb').write(r.content)
+
+# This also works!
+with open('C:/Users/pfriedhoff/Desktop/second.pdf', 'wb') as f:
+    for chunk in r.iter_content(chunk_size = 1024):
+        if chunk:
+            f.write(chunk)
+            f.flush()
+
+
 
 # Logout
 #r = requests.get('https://api.arenasolutions.com/v1/logout', headers = headers)
