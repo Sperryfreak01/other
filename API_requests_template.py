@@ -42,7 +42,7 @@ url = "https://api.arenasolutions.com/v1/"
 
 # Login to get Arena session Id
 headers = {"content-type": "application/json"}
-body = {"email": "pfriedhoff@nextracker.com", "password": "Spicyworkpass2015!", "workspaceId": "896561705"}
+body = {"email": "pfriedhoff@nextracker.com", "password": "", "workspaceId": "896561705"}
 r = requests.post(url + 'login', headers = headers, data = json.dumps(body))
 print ('login code is: %s' % r.status_code)
 
